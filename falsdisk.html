@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NebulaOS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-mode">
+  <div id="welcome-screen" class="welcome-screen">
+    <div class="welcome-card">
+      <h1 class="welcome-header">NebulaOS</h1>
+      <div id="welcome-message" class="welcome-content"></div>
+      <button class="welcome-content" onclick="dismissWelcomeScreen()">Start</button>
+    </div>
+  </div>
+  <div id="desktop" class="desktop">
+    <div class="desktop-icon" draggable="true" ondragstart="startIconDrag(event)" ondragend="endIconDrag(event)">
+      <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/folder_briefcase_24_filled.svg" alt="ProjectNebula Icon">
+      <div>ProjectNebula</div>
+    </div>
+    <div class="desktop-icon" draggable="true" ondragstart="startIconDrag(event)" ondragend="endIconDrag(event)">
+      <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/document_text_24_filled.svg" alt="Notes.txt Icon">
+      <div>Notes.txt</div>
+    </div>
+  </div>
+  <div id="dock" class="dock">
+    <button class="start-button" onclick="toggleStartMenu()" aria-label="Start Menu">
+      <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/rocket_24_filled.svg" alt="Start Icon">
+    </button>
+    <div class="dock-pinned">
+      <button onclick="openWindow('myComputer')" aria-label="My Computer">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/desktop_24_filled.svg" alt="My Computer Icon">
+      </button>
+      <button onclick="openWindow('browser')" aria-label="Browser">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/globe_24_filled.svg" alt="Browser Icon">
+      </button>
+      <button onclick="openWindow('notepad')" aria-label="Notepad">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/document_edit_24_filled.svg" alt="Notepad Icon">
+      </button>
+      <button onclick="openWindow('game')" aria-label="Game">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/game_24_filled.svg" alt="Game Icon">
+      </button>
+      <button onclick="openWindow('settings')" aria-label="Settings">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/settings_24_filled.svg" alt="Settings Icon">
+      </button>
+    </div>
+    <div class="taskbar-buttons" id="taskbar-buttons"></div>
+    <div class="dock-indicators">
+      <img id="wifi-icon" src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/wifi_off_24_filled.svg" alt="Wi-Fi Off Icon" onclick="toggleWifi()">
+      <img id="volume-icon" src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/volume_off_24_filled.svg" alt="Volume Off Icon" onclick="toggleSound()">
+      <img id="battery-icon" src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/battery_10_24_filled.svg" alt="Battery Icon" onclick="showBatteryPerformance()">
+      <span id="battery-level">100%</span>
+      <span id="clock"></span>
+    </div>
+  </div>
+  <div id="start-menu" class="start-menu">
+    <input type="text" id="start-search" placeholder="Search apps..." oninput="searchStartMenu()">
+    <div class="start-menu-pinned">
+      <button class="start-menu-item" onclick="openWindow('myComputer')">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/desktop_24_filled.svg" alt="My Computer Icon"> My Computer
+      </button>
+      <button class="start-menu-item" onclick="openWindow('browser')">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/globe_24_filled.svg" alt="Browser Icon"> Browser
+      </button>
+      <button class="start-menu-item" onclick="openWindow('notepad')">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/document_edit_24_filled.svg" alt="Notepad Icon"> Notepad
+      </button>
+      <button class="start-menu-item" onclick="openWindow('game')">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/game_24_filled.svg" alt="Game Icon"> Games
+      </button>
+      <button class="start-menu-item" onclick="openWindow('settings')">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/settings_24_filled.svg" alt="Settings Icon"> Settings
+      </button>
+      <button class="start-menu-item" onclick="showDesktop()">
+        <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/desktop_24_filled.svg" alt="Desktop Icon"> Show Desktop
+      </button>
+    </div>
+  </div>
+  <div id="context-menu" class="context-menu">
+    <button class="context-menu-item" onclick="createNewFile()">New File</button>
+    <button class="context-menu-item" onclick="createNewFolder()">New Folder</button>
+  </div>
+  <div id="folder-context-menu" class="folder-context-menu">
+    <button class="folder-context-menu-item" onclick="openItem()">Open</button>
+    <button class="folder-context-menu-item" onclick="deleteItem()">Delete</button>
+    <button class="folder-context-menu-item" onclick="renameItem()">Rename</button>
+    <button class="folder-context-menu-item" onclick="copyItem()">Copy</button>
+    <button class="folder-context-menu-item" onclick="pasteItem()">Paste</button>
+    <button class="folder-context-menu-item" onclick="showProperties()">Properties</button>
+  </div>
+  <div id="myComputer" class="window">
+    <div class="window-header" onmousedown="startDrag(event)">
+      My Computer
+      <div class="buttons">
+        <button class="button minimize" onclick="minimizeWindow('myComputer')" aria-label="Minimize"></button>
+        <button class="button maximize" onclick="toggleFullscreen('myComputer')" aria-label="Maximize"></button>
+        <button class="button close" onclick="closeWindow('myComputer')" aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-content explorer">
+      <div class="sidebar">
+        <h3>Quick Access</h3>
+        <ul>
+          <li onclick="navigateTo('/Desktop')">
+            <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/desktop_24_filled.svg" alt="Desktop Icon">
+            Desktop
+          </li>
+          <li onclick="navigateTo('/Documents')">
+            <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/document_folder_24_filled.svg" alt="Documents Icon">
+            Documents
+          </li>
+          <li onclick="navigateTo('/Downloads')">
+            <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/arrow_download_24_filled.svg" alt="Downloads Icon">
+            Downloads
+          </li>
+          <li onclick="navigateTo('/Pictures')">
+            <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/image_24_filled.svg" alt="Pictures Icon">
+            Pictures
+          </li>
+          <li onclick="navigateTo('/Music')">
+            <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/music_note_24_filled.svg" alt="Music Icon">
+            Music
+          </li>
+          <li onclick="navigateTo('/Videos')">
+            <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/video_24_filled.svg" alt="Videos Icon">
+            Videos
+          </li>
+        </ul>
+      </div>
+      <div class="main-pane">
+        <div class="nav-bar">
+          <button onclick="goBack()">Back</button>
+          <button onclick="goForward()">Forward</button>
+          <button onclick="goUp()">Up</button>
+          <span id="nav-path">/</span>
+        </div>
+        <div id="folders" class="folders"></div>
+      </div>
+    </div>
+  </div>
+  <div id="notepad" class="window">
+    <div class="window-header" onmousedown="startDrag(event)">
+      Notepad
+      <div class="buttons">
+        <button class="button minimize" onclick="minimizeWindow('notepad')" aria-label="Minimize"></button>
+        <button class="button maximize" onclick="toggleFullscreen('notepad')" aria-label="Maximize"></button>
+        <button class="button close" onclick="closeWindow('notepad')" aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-content notepad">
+      <div class="notepad-nav">
+        <input type="text" id="notepad-filename" placeholder="Filename">
+        <button onclick="saveNotepadFile()">Save</button>
+      </div>
+      <textarea id="notepad-text" class="notepad-content"></textarea>
+    </div>
+  </div>
+  <div id="browser" class="window">
+    <div class="window-header" onmousedown="startDrag(event)">
+      Browser
+      <div class="buttons">
+        <button class="button minimize" onclick="minimizeWindow('browser')" aria-label="Minimize"></button>
+        <button class="button maximize" onclick="toggleFullscreen('browser')" aria-label="Maximize"></button>
+        <button class="button close" onclick="closeWindow('browser')" aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-content browser">
+      <div class="browser-nav">
+        <input type="text" id="browser-url" placeholder="Enter URL">
+        <button onclick="loadWebsite()">Go</button>
+      </div>
+      <iframe id="browser-content" class="browser-content"></iframe>
+    </div>
+  </div>
+  <div id="game" class="window">
+    <div class="window-header" onmousedown="startDrag(event)">
+      Game Hub
+      <div class="buttons">
+        <button class="button minimize" onclick="minimizeWindow('game')" aria-label="Minimize"></button>
+        <button class="button maximize" onclick="toggleFullscreen('game')" aria-label="Maximize"></button>
+        <button class="button close" onclick="closeWindow('game')" aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-content game">
+      <div id="game-hub" class="game-hub">
+        <div class="game-tile" onclick="startGame('colorMatch')">
+          <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/color_24_filled.svg" alt="ColorMatch Icon">
+          <div>ColorMatch</div>
+        </div>
+        <div class="game-tile" onclick="startGame('shapeCatch')">
+          <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/shapes_24_filled.svg" alt="ShapeCatch Icon">
+          <div>ShapeCatch</div>
+        </div>
+        <div class="game-tile" onclick="startGame('numberPop')">
+          <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/number_symbol_24_filled.svg" alt="NumberPop Icon">
+          <div>NumberPop</div>
+        </div>
+        <div class="game-tile" onclick="startGame('blockStack')">
+          <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/stack_24_filled.svg" alt="BlockStack Icon">
+          <div>BlockStack</div>
+        </div>
+        <div class="game-tile" onclick="startGame('blockMatch')">
+          <img src="https://cdn.jsdelivr.net/npm/@fluentui/svg-icons/icons/grid_squares_24_filled.svg" alt="BlockMatch Icon">
+          <div>BlockMatch</div>
+        </div>
+      </div>
+      <div id="game-play-area" class="game-play-area" style="display: none;">
+        <button id="game-back-button" onclick="showGameHub()">Back to Hub</button>
+        <canvas id="game-canvas" class="game-canvas" width="400" height="300"></canvas>
+        <div id="game-score" class="game-info">Score: 0</div>
+      </div>
+    </div>
+  </div>
+  <div id="settings" class="window">
+    <div class="window-header" onmousedown="startDrag(event)">
+      Settings
+      <div class="buttons">
+        <button class="button minimize" onclick="minimizeWindow('settings')" aria-label="Minimize"></button>
+        <button class="button maximize" onclick="toggleFullscreen('settings')" aria-label="Maximize"></button>
+        <button class="button close" onclick="closeWindow('settings')" aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-content settings">
+      <div class="settings-sidebar">
+        <ul>
+          <li data-section="appearance" class="active" onclick="showSettingsSection('appearance')">Appearance</li>
+          <li data-section="power" onclick="showSettingsSection('power')">Power</li>
+          <li data-section="connectivity" onclick="showSettingsSection('connectivity')">Connectivity</li>
+        </ul>
+      </div>
+      <div class="settings-content">
+        <div id="appearance" class="settings-section">
+          <h3>Appearance</h3>
+          <select id="theme-select" onchange="changeTheme()">
+            <option value="dark">Dark Mode</option>
+            <option value="light">Light Mode</option>
+            <option value="cosmic">Cosmic Mode</option>
+          </select>
+          <select id="background-select" onchange="changeBackground()">
+            <option value="https://images.unsplash.com/photo-1600585154340-be6161a56a0c">Default</option>
+            <option value="https://images.unsplash.com/photo-1519681393784-d120267933ba">Mountain</option>
+            <option value="https://images.unsplash.com/photo-1472214103451-9374bd1c798e">Forest</option>
+          </select>
+        </div>
+        <div id="power" class="settings-section" style="display: none;">
+          <h3>Power</h3>
+          <select id="power-mode" onchange="changePowerMode()">
+            <option value="Balanced">Balanced</option>
+            <option value="Performance">Performance</option>
+            <option value="Power Saving">Power Saving</option>
+          </select>
+          <input type="range" id="brightness" min="0" max="100" value="50" oninput="adjustBrightness()">
+        </div>
+        <div id="connectivity" class="settings-section" style="display: none;">
+          <h3>Connectivity</h3>
+          <button id="wifi-toggle" onclick="toggleWifi()">Wi-Fi: Off</button>
+          <button id="sound-toggle" onclick="toggleSound()">Sound: Off</button>
+          <button id="bluetooth-toggle" onclick="toggleBluetooth()">Bluetooth: Off</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
