@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome Screen</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
+
+    :root {
+      --font-primary: 'Ubuntu', 'Segoe UI', Arial, sans-serif;
+      --ubuntu-orange: #E95420;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: var(--font-primary);
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* Glowing gradient animated background */
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(270deg, #e95420, #ffcc70, #00c9ff, #e95420);
+      background-size: 800% 800%;
+      animation: gradientFlow 20s ease infinite;
+      z-index: -3;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Floating glowing particles */
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(100vh) scale(1);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-10vh) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    .welcome-container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      animation: zoomFade 2s ease-in-out forwards;
+    }
+
+    .welcome-image {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      border: 3px solid #fff;
+      object-fit: cover;
+    }
+
+    .welcome-text {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
+    @keyframes zoomFade {
+      0% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .welcome-text {
+        font-size: 2.2rem;
+      }
+      .welcome-image {
+        width: 90px;
+        height: 90px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated background -->
+  <div class="background"></div>
+  <div class="particles" id="particles"></div>
+
+  <!-- Welcome content -->
+  <div class="welcome-container">
+    <img src="falsdesktop-high-resolution-logo.png" alt="Welcome Image" class="welcome-image" />
+    <div class="welcome-text">WELCOME</div>
+  </div>
+
+  <script>
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 60; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      particle.style.left = Math.random() * 100 + 'vw';
+      particle.style.animationDuration = (5 + Math.random() * 10) + 's';
+      particle.style.animationDelay = (Math.random() * 5) + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Redirect after 3 seconds
+    setTimeout(() => {
+      window.location.href = 'falsdisk.html';
+    }, 3000);
+  </script>
+
+</body>
+</html>
